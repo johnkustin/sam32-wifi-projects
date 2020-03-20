@@ -6,7 +6,7 @@ import analogio
 from digitalio import DigitalInOut
 import neopixel
 import time
-
+import pulseio
 from adafruit_esp32spi import adafruit_esp32spi
 import adafruit_esp32spi.adafruit_esp32spi_wifimanager as wifimanager
 import adafruit_esp32spi.adafruit_esp32spi_wsgiserver as server
@@ -19,7 +19,7 @@ esp32_cs = DigitalInOut(board.TMS) #GPIO14
 esp32_ready = DigitalInOut(board.TCK) #GPIO13
 esp32_reset = DigitalInOut(board.RTS)
 
-analogReadPin = analogio.AnalogIn(board.A9)
+analogReadPin = pulseio.PWMOut(board.D31)
 
 print("Assigned SPI Module")
 spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
@@ -61,13 +61,14 @@ while True:
 	motorStatus = jsonData['motor']
 	colorStatus = jsonData['color']
 	motorStatus = jsonData['speed']
-	digitalWriteValue = jsonData['digitalWriteValue']
+	digitalWriteValue = jsonData['duty-cycle']
 	print("Led Status:", ledStatus)
 	print("Motor Status:", motorStatus)	
 	print("Color Value:", colorStatus)
 	print("Motor Speed:", ledStatus)
-	print("Digital Value:", digitalWriteValue)
 	#esp.set_digital_write(5, digitalWriteValue)
-	print("Analog value read at pin:", analogReadPin.value) # 16 bit resolution
-	print("Voltage at pin: ", analogReadPin.value * (((2**16 - 1) / analogReadPin.reference_voltage)**-1))
+	#print("Analog value read at pin:", analogReadPin.value) # 16 bit resolution
+	#print("Voltage at pin: ", analogReadPin.value * (((2**16 - 1) / analogReadPin.reference_voltage)**-1))
+	print("PWM duty cycle", jsonData['duty-cycle'])
+	analogReadPin.duty_cycle = jsonData['duty-cycle']
 	time.sleep(5)

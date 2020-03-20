@@ -226,7 +226,8 @@ def restart_program():
     #         os.close(handler.fd)
     # except Exception as e:
     #     logging.error(e)
-    os.execl(sys.executable, sys.executable, * sys.argv)
+    #os.execl(sys.executable, sys.executable, * sys.argv)
+    wifi.create_ap()
 
 # Start the server
 wsgiServer.start()
