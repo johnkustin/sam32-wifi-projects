@@ -1,4 +1,6 @@
 # sam32-wifi-projects
+https://lab64.stanford.edu/  
+
 CircuitPython projects for the SAM32 board made by Max Holliday and Steve Clark
 
 **Note:** If you haven't updated the ESP32 WiFi chip (you'll know if you have) then load `NINA_W102-1.3.0_sam32.bin` onto a *micro*SD card, insert that into the SAM32, connect to the SAM32, and run `esp32spi_prog.py`.
@@ -27,4 +29,3 @@ Depending on what you want your SAM32 to do, paste either `esp32-http-client.py`
 - [ ] Scale the test to *>2* clients. 
 
 Direct Questions, Concerns, Suggestions to:   kustinj AT stanford DOT edu
-
