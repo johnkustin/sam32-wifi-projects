@@ -15,3 +15,13 @@ Depending on what you want your SAM32 to do, paste either `esp32-http-client.py`
 | esp32-http-client.py  | Template for client side interaction with SAM32 webserver |
 | esp32-http-server.py  | Template for SAM32 webserver |
 | esp32spi_prog.py      | Script to load ESP32 firmware from microSD |
+
+## Project Status
+- [x] Initialize a SAM32's firmware and CircuitPython libraries in order to run code.
+- [x] Connect a *client* SAM32 to a *server* SAM32 using a WiFi access point (AP).
+- [x] Access the AP webserver using a computer.
+- [x] Verify HTTP requests between client and server work.
+- [x] Create a `.json` document in `/static` so a server can broadcast data to its clients.
+- [x] Send and receive *wireless* Digital & Analog pin commands (PWM and Digital I/O).
+- [ ] Test pin commands on LEDs & servo.
+- [ ] Scale the test to *>2* clients. 
