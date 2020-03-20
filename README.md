@@ -28,4 +28,3 @@ Depending on what you want your SAM32 to do, paste either `esp32-http-client.py`
 
 Direct Questions, Concerns, Suggestions to:   kustinj AT stanford DOT edu
 
-test
