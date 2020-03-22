@@ -92,7 +92,7 @@ except (OSError) as e:
         This example depends on a static asset directory.
         Please create one named {0} in the root of the device filesystem.""".format(static))
 
-#web_app = SimpleWSGIApplication(static_dir=static)
+# Access the simpleWSGIApplication class
 web_app = webAppClass(static_dir=static)
 web_app.on("GET", "/led_on", led_on)
 web_app.on("GET", "/led_off", led_off)
