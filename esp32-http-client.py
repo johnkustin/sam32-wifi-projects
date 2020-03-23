@@ -19,8 +19,8 @@ esp32_cs = DigitalInOut(board.TMS) #GPIO14
 esp32_ready = DigitalInOut(board.TCK) #GPIO13
 esp32_reset = DigitalInOut(board.RTS)
 
-analogReadPin = pulseio.PWMOut(board.D31)
-
+pwmPin = pulseio.PWMOut(board.D31)
+analogReadPin = analogio.AnalogIn(board.A9)
 print("Assigned SPI Module")
 spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
 
@@ -55,8 +55,10 @@ while True:
 		continue
 	try: jsonData = resp.json()
 	except ValueError as e:
-		print("Failed downloading JSON Data", e)	
+		print("Failed downloading JSON Data", e)
+		continue	
 	print(jsonData)
+	resp.close()
 	ledStatus = jsonData['led']
 	motorStatus = jsonData['motor']
 	colorStatus = jsonData['color']
@@ -67,8 +69,8 @@ while True:
 	print("Color Value:", colorStatus)
 	print("Motor Speed:", ledStatus)
 	#esp.set_digital_write(5, digitalWriteValue)
-	#print("Analog value read at pin:", analogReadPin.value) # 16 bit resolution
-	#print("Voltage at pin: ", analogReadPin.value * (((2**16 - 1) / analogReadPin.reference_voltage)**-1))
+	print("Analog value read at pin:", analogReadPin.value) # 16 bit resolution
+	print("Voltage at pin: ", analogReadPin.value * (((2**16 - 1) / analogReadPin.reference_voltage)**-1))
 	print("PWM duty cycle", jsonData['duty-cycle'])
-	analogReadPin.duty_cycle = jsonData['duty-cycle']
+	pwmPin.duty_cycle = jsonData['duty-cycle']
 	time.sleep(5)
