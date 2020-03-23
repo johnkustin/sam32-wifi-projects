@@ -19,8 +19,11 @@ esp32_cs = DigitalInOut(board.TMS) #GPIO14
 esp32_ready = DigitalInOut(board.TCK) #GPIO13
 esp32_reset = DigitalInOut(board.RTS)
 
-pwmPin = pulseio.PWMOut(board.D31, frequency = 50)
+pwmPin = pulseio.PWMOut(board.D31, frequency = 5000)
 analogReadPin = analogio.AnalogIn(board.A9)
+led = DigitalInOut(board.D59)
+led.direction = digitalio.Direction.OUTPUT
+led.value = False
 print("Assigned SPI Module")
 spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
 
@@ -39,6 +42,7 @@ sam32webserverip = "http://192.168.4.1"
 sam32websererport = ":80"
 
 (r, g, b) = (1,1,1)
+duty_cycle_counter = 0
 #esp.set_pin_mode(5,1)#=output
 for i in range (0,3):
 	try: resp = wificonnection.get(sam32webserverip + sam32websererport)
@@ -49,7 +53,6 @@ for i in range (0,3):
 	print(resp.text)
 	resp.close()
 while True:
-	print("JSON Data:")
 	try: resp = wificonnection.get(sam32webserverip + "/jsonData.json")
 	except: 
 		print("Failed on GET. continuing...")
@@ -60,7 +63,7 @@ while True:
 		print("Failed downloading JSON Data", e)
 		wificonnection.reset()
 		continue	
-	print(jsonData)
+	print("JSON Data:", jsonData)
 	resp.close()
 	ledStatus = jsonData['led']
 	motorStatus = jsonData['motor']
@@ -71,12 +74,16 @@ while True:
 	print("Motor Status:", motorStatus)	
 	print("Color Value:", colorStatus)
 	print("Motor Speed:", ledStatus)
-	#esp.set_digital_write(5, digitalWriteValue)
+	led.value = True
+	time.sleep(2)
+	led.value = False
 	print("Analog value read at pin:", analogReadPin.value) # 16 bit resolution
 	print("Voltage at pin: ", analogReadPin.value * 3.3 / (2**16))
 	print("PWM duty cycle", jsonData['duty-cycle'])
 	try: 
-		pwmPin.duty_cycle = jsonData['duty-cycle']
+		duty_cycle_pair = jsonData['duty-cycle']
+		pwmPin.duty_cycle = duty_cycle_pair[duty_cycle_counter % len(duty_cycle_pair)]
+		duty_cycle_counter = duty_cycle_counter + 1
 		#postResp = wificonnection.post(sam32webserverip + "/ajax/ledcolor",
 		postResp = wificonnection.post(sam32webserverip + "/relay",
 			json = {"r": r % 255, "g": g % 255, "b": b % 255})
