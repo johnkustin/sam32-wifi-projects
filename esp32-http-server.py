@@ -4,7 +4,7 @@ import board
 import busio
 from digitalio import DigitalInOut
 import neopixel
-#from bs4 import BeautifulSoup
+import time
 
 from adafruit_esp32spi import adafruit_esp32spi
 import adafruit_esp32spi.adafruit_esp32spi_wifimanager as wifimanager
@@ -77,6 +77,12 @@ def led_color(environ): # pylint: disable=unused-argument
     status_light.fill(rgb_tuple)
     return ("200 OK", [], [])
 
+def relay(environ):
+    json = json_module.loads(environ['wsgi.input'].getvalue())
+    print("From relay function: ", json)
+    rgb_tuple = (json.get("r"), json.get("g"), json.get("b"))
+    status_light.fill(rgb_tuple)
+    return ("200 OK", [], [])
 # Here we create our application, setting the static directory location
 # and registering the above request_handlers for specific HTTP requests
 # we want to listen and respond to.
@@ -97,6 +103,7 @@ web_app = webAppClass(static_dir=static)
 web_app.on("GET", "/led_on", led_on)
 web_app.on("GET", "/led_off", led_off)
 web_app.on("POST", "/ajax/ledcolor", led_color)
+web_app.on("POST", "/relay", relay)
 
 
 # Here we setup our server, passing in our web_app as the application
@@ -104,13 +111,6 @@ server.set_interface(esp)
 wsgiServer = server.WSGIServer(80, application=web_app)
 
 print("open this IP in your browser: ", esp.pretty_ip(esp.ip_address))
-
-def restart_program():
-    """Restarts the current program, with file objects and descriptors
-       cleanup
-    """
-
-    wifi.create_ap()
 
 # Start the server
 wsgiServer.start()
@@ -120,5 +120,6 @@ while True:
         wsgiServer.update_poll()
         # Could do any other background tasks here, like reading sensors
     except (ValueError, RuntimeError) as e:
-        print("Failed to update sever, restarting server script")
-        restart_program()
+        print("Failed to update server, restarting ESP32\n", e)
+        wifi.reset()
+        continue
