@@ -1,0 +1,39 @@
+<!doctype html>
+
+<html>
+
+<head>
+
+  <title>This is the title of the webpage!</title>
+  <script async src="led_color_picker_example.js"></script>
+</head>
+
+<script>
+  function sendPost() {
+    rgbObject = {
+      r: 99,
+      g: 99,
+      b: 99
+    }
+    console.log(`r: ${rgbObject.r} g: ${rgbObject.g} b: ${rgbObject.b}`);
+    data = JSON.stringify(rgbObject);
+    window.fetch("/relay", {
+      method: "POST",
+      body: data,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+    })
+  }
+</script>
+
+<body>
+
+  <h1>LED color picker demo!</h1>
+  <canvas id="colorPicker" height="300px" width="300px"></canvas>
+  <button onclick="sendPost()"> Click me to send a POST request to the server SAM32!</button>
+  <p>Success!</p>
+
+</body>
+
+</html>
