@@ -111,6 +111,13 @@ wsgiServer = server.WSGIServer(80, application=web_app)
 
 print("open this IP in your browser: ", esp.pretty_ip(esp.ip_address))
 
+def restart_server():
+    print("Failed to update server, restarting ESP32\n", e)
+    wifi.reset()
+    wifi = wifimanager.ESPSPI_WiFiManager(esp, secrets, status_light)
+    wifi.create_ap()
+    wsgiServer.start()
+
 # Start the server
 wsgiServer.start()
 while True:
@@ -119,6 +126,5 @@ while True:
         wsgiServer.update_poll()
         # Could do any other background tasks here, like reading sensors
     except (ValueError, RuntimeError) as e:
-        print("Failed to update server, restarting ESP32\n", e)
-        wifi.reset()
+        restart_server()
         continue
