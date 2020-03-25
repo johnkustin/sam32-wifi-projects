@@ -28,5 +28,7 @@ Depending on what you want your SAM32 to do, paste either `esp32-http-client.py`
 - [x] Test pin commands on LEDs or servo.
 - [ ] Scale the test to *>2* clients. 
 - [ ] Control latency between client/server requests.
+- [ ] Log data onto the webpage.
+- [ ] Add ways to actuate and control SAM32 from browser.
 
 Direct Questions, Concerns, Suggestions to:   kustinj AT stanford DOT edu
