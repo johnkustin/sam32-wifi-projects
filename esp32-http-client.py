@@ -21,11 +21,13 @@ esp32_ready = DigitalInOut(board.TCK) #GPIO13
 esp32_reset = DigitalInOut(board.RTS)
 print("Assigned ESP32 Pins")
 
+
 pwmPin = pulseio.PWMOut(board.D31, frequency = 5000)
 analogReadPin = analogio.AnalogIn(board.A9)
 led = DigitalInOut(board.D59)
 led.direction = digitalio.Direction.OUTPUT
 led.value = False
+
 print("Assigned SPI Module")
 spi = busio.SPI(board.SCK, board.MOSI, board.MISO)
 
@@ -64,9 +66,11 @@ while True:
 	try: jsonData = resp.json()
 	except ValueError as e:
 		print("Failed downloading JSON Data", e)
+
 		wificonnection.reset()
 		continue	
 	print("JSON Data:", jsonData)
+
 	resp.close()
 	led.value = True
 	time.sleep(2)
