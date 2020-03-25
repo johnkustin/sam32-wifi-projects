@@ -27,6 +27,7 @@ Depending on what you want your SAM32 to do, paste either `esp32-http-client.py`
 - [x] Send and receive *wireless* Digital & Analog pin commands (PWM and Digital I/O).
 - [x] Test pin commands on LEDs & servo.
 - [ ] Scale the test to *>2* clients. 
+- [ ] Control latency between client/server requests.
 - [ ] Log data onto the webpage.
 - [ ] Add ways to actuate and control SAM32 from browser.
 
