@@ -83,6 +83,7 @@ def relay(environ):
     rgb_tuple = (json.get("r"), json.get("g"), json.get("b"))
     status_light.fill(rgb_tuple)
     return ("200 OK", [], [])
+
 # Here we create our application, setting the static directory location
 # and registering the above request_handlers for specific HTTP requests
 # we want to listen and respond to.
@@ -112,6 +113,12 @@ wsgiServer = server.WSGIServer(80, application=web_app)
 
 print("open this IP in your browser: ", esp.pretty_ip(esp.ip_address))
 
+def restart_server():
+    print("Failed to update server, restarting ESP32\n", e)
+    wifi = wifimanager.ESPSPI_WiFiManager(esp, secrets, status_light)
+    wifi.create_ap()
+    wsgiServer.start()
+
 # Start the server
 wsgiServer.start()
 while True:
@@ -120,6 +127,6 @@ while True:
         wsgiServer.update_poll()
         # Could do any other background tasks here, like reading sensors
     except (ValueError, RuntimeError) as e:
-        print("Failed to update server, restarting ESP32\n", e)
         wifi.reset()
+        restart_server()
         continue
