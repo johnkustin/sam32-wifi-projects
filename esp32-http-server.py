@@ -83,6 +83,7 @@ def relay(environ):
     rgb_tuple = (json.get("r"), json.get("g"), json.get("b"))
     status_light.fill(rgb_tuple)
     return ("200 OK", [], [])
+
 # Here we create our application, setting the static directory location
 # and registering the above request_handlers for specific HTTP requests
 # we want to listen and respond to.

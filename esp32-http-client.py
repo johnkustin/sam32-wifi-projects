@@ -71,8 +71,9 @@ while True:
 	led.value = True
 	time.sleep(2)
 	led.value = False
-	print("ADC value at pin A9: ", analogReadPin.value) # 16 bit resolution
-	print("Voltage at pin A9: ", analogReadPin.value * 3.3 / (2**16))
+	analogvalue = analogReadPin.value
+	print("ADC value at pin A9: ", analogvalue) # 16 bit resolution
+	print("Voltage at pin A9: ", analogvalue * 3.3 / (2**16))
 	try: 
 		duty_cycle_pair = jsonData['duty-cycle']
 		pwmPin.duty_cycle = duty_cycle_pair[duty_cycle_counter % len(duty_cycle_pair)]

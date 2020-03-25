@@ -6,10 +6,11 @@
 
   <title>This is the title of the webpage!</title>
   <script async src="led_color_picker_example.js"></script>
+  <!-- <meta http-equiv="refresh" content="1" /> -->
 </head>
 
 <script>
-  function sendPost() {
+  function sendPOST() {
     rgbObject = {
       r: 99,
       g: 99,
@@ -31,7 +32,7 @@
 
   <h1>LED color picker demo!</h1>
   <canvas id="colorPicker" height="300px" width="300px"></canvas>
-  <button onclick="sendPost()"> Click me to send a POST request to the server SAM32!</button>
+  <button onclick="sendPOST()"> Click me to send a POST request to the server SAM32!</button>
   <p>Success!</p>
 
 </body>
