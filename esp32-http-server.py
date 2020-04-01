@@ -83,6 +83,18 @@ def relay(environ):
     rgb_tuple = (json.get("r"), json.get("g"), json.get("b"))
     status_light.fill(rgb_tuple)
     return ("200 OK", [], [])
+def echoRequest(environ):
+    status = '200 OK'
+    headers = [('Content-type', 'text/plain')]
+    data = ['Custom data body\n']
+    def resp_itr():
+        for d in data:
+            if isinstance(d,bytes):
+                yield d
+            else:
+                yield d.encode("utf-8")
+    return (status, headers, resp_itr())
+
 
 # Here we create our application, setting the static directory location
 # and registering the above request_handlers for specific HTTP requests
@@ -105,6 +117,7 @@ web_app.on("GET", "/led_on", led_on)
 web_app.on("GET", "/led_off", led_off)
 web_app.on("POST", "/ajax/ledcolor", led_color)
 web_app.on("POST", "/relay", relay)
+web_app.on("GET", "/echoRequest", echoRequest)
 
 
 # Here we setup our server, passing in our web_app as the application
