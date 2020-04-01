@@ -1,16 +1,9 @@
-import os
-import sys
-import board
-import busio
+import os, sys, board, busio, neopixel
 from digitalio import DigitalInOut
-import neopixel
-import time
-
 from adafruit_esp32spi import adafruit_esp32spi
 import adafruit_esp32spi.adafruit_esp32spi_wifimanager as wifimanager
 import adafruit_esp32spi.adafruit_esp32spi_wsgiserver as server
 import adafruit_esp32spi.adafruit_esp32spi_socket as socket
-
 from simpleWSGIApplication import SimpleWSGIApplication as webAppClass
 
 # This example depends on the 'static' folder in the examples folder
@@ -43,17 +36,14 @@ esp = adafruit_esp32spi.ESP_SPIcontrol(spi, esp32_cs, esp32_ready, esp32_reset, 
 
 status_light = neopixel.NeoPixel(board.NEOPIXEL, 1, brightness=0.2)
 
-## If you want to connect to wifi with secrets:
-#wifi = wifimanager.ESPSPI_WiFiManager(esp, secrets, status_light)
-#wifi.connect()
-
-#for ap in esp.scan_networks():
+#for ap in esp.scan_networks(): ## scan networks and print signal strength
 #   print("\t%s\t\tRSSI: %d" % (str(ap['ssid'], 'utf-8'), ap['rssi']))
 
 ## If you want to create a WIFI hotspot to connect to with secrets:
 secrets = {"ssid": "Hey Steve", "password": "notyourwifi"}
 wifi = wifimanager.ESPSPI_WiFiManager(esp, secrets, status_light)
-wifi.create_ap()
+wifi.create_ap()    ## create a wifi access point with secrets
+#wifi.connect()     ## connect to wifi with secrets
 
 ## To you want to create an un-protected WIFI hotspot to connect to with secrets:"
 #wifi = wifimanager.ESPSPI_WiFiManager(esp, secrets, status_light)
