@@ -7,6 +7,7 @@ from digitalio import DigitalInOut
 import neopixel
 import time
 import pulseio
+import io
 from adafruit_esp32spi import adafruit_esp32spi
 import adafruit_esp32spi.adafruit_esp32spi_wifimanager as wifimanager
 import adafruit_esp32spi.adafruit_esp32spi_wsgiserver as server
@@ -47,6 +48,7 @@ sam32websererport = ":80"
 rgbArr = [(255,0,0), (0,255,0), (0,0,255)]
 duty_cycle_counter = 0
 
+
 for i in range (0,3):
 	try: resp = wificonnection.get(sam32webserverip + sam32websererport)
 	except: 
@@ -85,6 +87,10 @@ while True:
 			"b":rgbArr[duty_cycle_counter % len(rgbArr)][2] })
 		
 		postResp.close()
+		echoRequest = wificonnection.get(sam32webserverip + "/echoRequest")
+		print(echoRequest.text)
+		print(str(echoRequest.content, 'utf-8'))
+		echoRequest.close()
 	except (ValueError, RuntimeError) as e:
 	    print("Failed to get data, retrying\n", e)
         wificonnection.reset()
