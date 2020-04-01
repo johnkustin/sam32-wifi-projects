@@ -1,18 +1,10 @@
-import os
-import board
-import busio
-import digitalio
-import analogio
+import os, board, busio, digitalio, analogio
+import neopixel, time, pulseio, io
 from digitalio import DigitalInOut
-import neopixel
-import time
-import pulseio
-import io
 from adafruit_esp32spi import adafruit_esp32spi
 import adafruit_esp32spi.adafruit_esp32spi_wifimanager as wifimanager
 import adafruit_esp32spi.adafruit_esp32spi_wsgiserver as server
 import adafruit_esp32spi.adafruit_esp32spi_socket as socket
-import adafruit_requests as requests
 
 
 # SAM32 board ESP32 Setup
@@ -48,7 +40,18 @@ sam32websererport = ":80"
 rgbArr = [(255,0,0), (0,255,0), (0,0,255)]
 duty_cycle_counter = 0
 
+def pulseLED(led):
+	led.value = True
+	time.sleep(2)
+	led.value = False
+def readAnalogPin(pin):
+	analogvalue = analogReadPin.value
+	print("ADC value: ", analogvalue) # 16 bit resolution
+	print("Voltage: ", analogvalue * 3.3 / (2**16))
+def writePWMDutyCycle(pin, val):
+	pin.duty_cycle = val
 
+print("Testing connection\n\n")
 for i in range (0,3):
 	try: resp = wificonnection.get(sam32webserverip + sam32websererport)
 	except: 
@@ -57,7 +60,7 @@ for i in range (0,3):
 		continue
 	print(resp.text)
 	resp.close()
-while True:
+while True: ## main client loop
 	try: resp = wificonnection.get(sam32webserverip + "/jsonData.json")
 	except: 
 		print("Failed on GET. continuing...")
@@ -70,15 +73,12 @@ while True:
 		continue	
 	print("JSON Data:", jsonData)
 	resp.close()
-	led.value = True
-	time.sleep(2)
-	led.value = False
-	analogvalue = analogReadPin.value
-	print("ADC value at pin A9: ", analogvalue) # 16 bit resolution
-	print("Voltage at pin A9: ", analogvalue * 3.3 / (2**16))
+	pulseLED(led)	
+	readAnalogPin(analogReadPin)
 	try: 
 		duty_cycle_pair = jsonData['duty-cycle']
-		pwmPin.duty_cycle = duty_cycle_pair[duty_cycle_counter % len(duty_cycle_pair)]
+		duty_cycle_val = duty_cycle_pair[duty_cycle_counter % len(duty_cycle_pair)]
+		writePWMDutyCycle(pwmPin, duty_cycle_val)
 		duty_cycle_counter = duty_cycle_counter + 1
 		#postResp = wificonnection.post(sam32webserverip + "/ajax/ledcolor",
 		postResp = wificonnection.post(sam32webserverip + "/relay",
@@ -95,4 +95,3 @@ while True:
 	    print("Failed to get data, retrying\n", e)
         wificonnection.reset()
         continue
-	time.sleep(1)
